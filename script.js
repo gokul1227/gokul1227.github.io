@@ -34,7 +34,13 @@
   /* ---------------- scroll reveal ---------------- */
   const revealEls = document.querySelectorAll('[data-reveal]');
   const revealChildren = document.querySelectorAll('[data-reveal-child]');
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  
   if('IntersectionObserver' in window && !reduceMotion){
+    // Adjust threshold for mobile - lower threshold means animations trigger earlier
+    const mainThreshold = isMobile ? [0.05, 0.2] : 0.15;
+    const childThreshold = isMobile ? [0.05, 0.2] : 0.2;
+    
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if(e.isIntersecting){
@@ -43,21 +49,22 @@
           e.target.classList.remove('in');
         }
       });
-    }, { threshold: 0.15 });
+    }, { threshold: mainThreshold });
     revealEls.forEach(el => io.observe(el));
 
     const ioChild = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         const idx = Array.prototype.indexOf.call(e.target.parentElement.children, e.target);
         if(e.isIntersecting){
-          e.target.style.transitionDelay = (Math.max(idx,0) * 90) + 'ms';
+          const delayMs = isMobile ? Math.max(idx,0) * 60 : Math.max(idx,0) * 90;
+          e.target.style.transitionDelay = delayMs + 'ms';
           e.target.classList.add('in');
         } else {
           e.target.classList.remove('in');
           e.target.style.transitionDelay = '';
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: childThreshold });
     revealChildren.forEach(el => ioChild.observe(el));
   } else {
     revealEls.forEach(el => el.classList.add('in'));
@@ -141,14 +148,18 @@
     const rings = document.querySelectorAll('.orbit-ring');
     const ambientLayer = document.getElementById('ambientLayer');
     let ticking = false;
+    
+    // Reduce parallax effect on mobile for better performance
+    const parallaxMultiplier = isMobile ? 0.5 : 1;
+    
     window.addEventListener('scroll', () => {
       if(!ticking){
         requestAnimationFrame(() => {
           const y = window.scrollY;
-          if(gridOverlay) gridOverlay.style.transform = 'translateY(' + (y * 0.15) + 'px)';
-          if(ambientLayer) ambientLayer.style.transform = 'translateY(' + (y * 0.08) + 'px)';
+          if(gridOverlay) gridOverlay.style.transform = 'translateY(' + (y * 0.15 * parallaxMultiplier) + 'px)';
+          if(ambientLayer) ambientLayer.style.transform = 'translateY(' + (y * 0.08 * parallaxMultiplier) + 'px)';
           rings.forEach((ring, i) => {
-            ring.style.transform = 'translate(-50%,-50%) translateY(' + (y * (0.05 + i*0.03)) + 'px)';
+            ring.style.transform = 'translate(-50%,-50%) translateY(' + (y * (0.05 + i*0.03) * parallaxMultiplier) + 'px)';
           });
           ticking = false;
         });
@@ -176,11 +187,12 @@
       requestAnimationFrame(tick);
     }
     if('IntersectionObserver' in window){
+      const countThreshold = isMobile ? [0.1, 0.4] : 0.6;
       const io = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if(e.isIntersecting){ animateCounter(e.target); io.unobserve(e.target); }
         });
-      }, { threshold: 0.6 });
+      }, { threshold: countThreshold });
       counters.forEach(el => io.observe(el));
     } else {
       counters.forEach(el => { el.textContent = el.getAttribute('data-count-to'); });
@@ -611,28 +623,54 @@
   const emailPopover = document.getElementById('emailPopover');
   let emailHideTimer = null;
   document.querySelectorAll('.email-trigger').forEach(btn => {
+    // Prevent any default email client action
+    btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    btn.addEventListener('auxclick', (e) => e.preventDefault());
+    
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
+      
       const email = btn.getAttribute('data-email');
       if(!emailPopover) return;
+      
       const r = btn.getBoundingClientRect();
-      let copied = false;
+      
+      // Copy to clipboard
       if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(email).then(() => { copied = true; }).catch(() => {});
+        navigator.clipboard.writeText(email)
+          .then(() => {
+            console.log('Email copied to clipboard');
+          })
+          .catch(() => {
+            console.log('Failed to copy to clipboard');
+          });
+      } else {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = email;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try { document.execCommand('copy'); } catch(err) {}
+        document.body.removeChild(textarea);
       }
-      emailPopover.innerHTML = email + '<span class="copy-hint">' + (navigator.clipboard ? 'Copied to clipboard' : 'Tap and hold to copy') + '</span>';
-      const top = r.bottom + 10;
-      let left = r.left + r.width/2;
+      
+      // Show popover with email and "Copied" message
+      emailPopover.innerHTML = '<span style="display:block; margin-bottom:4px;">' + email + '</span><span class="copy-hint">✓ Copied to clipboard</span>';
+      const top = r.bottom + 12;
+      const left = r.left + r.width/2;
       emailPopover.style.top = top + 'px';
       emailPopover.style.left = left + 'px';
-      emailPopover.style.transform = 'translateX(-50%) translateY(8px) scale(.96)';
+      emailPopover.style.transform = 'translateX(-50%) translateY(0) scale(1)';
       requestAnimationFrame(() => emailPopover.classList.add('show'));
       clearTimeout(emailHideTimer);
-      emailHideTimer = setTimeout(() => emailPopover.classList.remove('show'), 3200);
+      emailHideTimer = setTimeout(() => emailPopover.classList.remove('show'), 2800);
     });
   });
+  
+  // Close popover when clicking elsewhere
   document.addEventListener('click', (e) => {
-    if(emailPopover && !e.target.closest('.email-trigger') && !e.target.closest('.email-popover')){
+    if(emailPopover && !e.target.closest('.email-trigger') && !e.target.closest('#emailPopover')){
       emailPopover.classList.remove('show');
     }
   });
