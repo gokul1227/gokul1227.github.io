@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gokulakannan R C — Cloud &amp; DevOps Engineer</title>
+<meta name="description" content="Gokulakannan R C — Cloud & DevOps Engineer. AWS, Azure, Terraform, CI/CD, and infrastructure automation.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="loader" id="pageLoader" aria-hidden="true">
+  <div class="loader-inner">
+    <svg class="loader-logo" viewBox="0 0 24 24" fill="none">
+      <rect class="loader-draw" x="2" y="2" width="9" height="9" rx="2" stroke="#dbfcff" stroke-width="1.6"/>
+      <rect class="loader-draw" x="13" y="2" width="9" height="9" rx="2" stroke="#dcffdc" stroke-width="1.6"/>
+      <rect class="loader-draw" x="2" y="13" width="9" height="9" rx="2" stroke="#ebb2ff" stroke-width="1.6"/>
+      <rect class="loader-draw" x="13" y="13" width="9" height="9" rx="2" stroke="#dbfcff" stroke-width="1.6"/>
+    </svg>
+    <div class="loader-text" id="loaderText">BOOTING SYSTEM<span class="loader-dots">...</span></div>
+    <div class="loader-bar"><div class="loader-bar-fill" id="loaderBarFill"></div></div>
+  </div>
+</div>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="ambient-layer" id="ambientLayer" aria-hidden="true">
+  <svg class="ambient-blob" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="blobGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00dbe9"/>
+        <stop offset="100%" stop-color="#ebb2ff"/>
+      </linearGradient>
+    </defs>
+    <path id="blobPath" fill="url(#blobGrad)" opacity="0.12"
+      d="M300,120 C420,120 480,220 470,320 C460,420 380,480 280,470 C180,460 110,380 120,280 C130,180 200,120 300,120 Z">
+      <animate attributeName="d" dur="16s" repeatCount="indefinite"
+        values="M300,120 C420,120 480,220 470,320 C460,420 380,480 280,470 C180,460 110,380 120,280 C130,180 200,120 300,120 Z;
+                M300,140 C400,110 470,200 460,300 C450,410 400,470 300,480 C200,490 130,420 120,320 C110,210 200,170 300,140 Z;
+                M300,120 C420,120 480,220 470,320 C460,420 380,480 280,470 C180,460 110,380 120,280 C130,180 200,120 300,120 Z"/>
+    </path>
+  </svg>
+  <span class="particle-dot p1"></span>
+  <span class="particle-dot p2"></span>
+  <span class="particle-dot p3"></span>
+  <span class="particle-dot p4"></span>
+  <span class="particle-dot p5"></span>
+</div>
+
+<header class="nav" id="siteNav">
+  <div class="scroll-progress"><div class="scroll-progress-fill" id="scrollProgressFill"></div></div>
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><rect class="brand-draw" x="2" y="2" width="9" height="9" rx="2" stroke="#dbfcff" stroke-width="1.6"/><rect class="brand-draw" x="13" y="2" width="9" height="9" rx="2" stroke="#dcffdc" stroke-width="1.6"/><rect class="brand-draw" x="2" y="13" width="9" height="9" rx="2" stroke="#ebb2ff" stroke-width="1.6"/><rect class="brand-draw" x="13" y="13" width="9" height="9" rx="2" stroke="#dbfcff" stroke-width="1.6" opacity=".4"/></svg>
+      <span class="brand-text">GOKUL_DEVOPS_CORE</span>
+    </div>
+    <nav class="links">
+      <a href="#stack" class="active">Stack</a>
+      <a href="#architectures">Architectures</a>
+      <a href="#experience">Log</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <div class="badge-counter" id="badgeCounter" title="Find the floating badges hidden around the site">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20l1.3-6.5-4.9-4.6 6.6-.8L12 2z"/></svg>
+        <span id="badgeCount">0</span><span>/</span><span id="badgeTotal">4</span>
+      </div>
+      <a class="icon-btn magnetic" href="https://linkedin.com/in/gokulakannan" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="10" x2="8" y2="17"/><line x1="8" y1="7" x2="8" y2="7"/><path d="M12 17v-4a2 2 0 0 1 4 0v4"/></svg>
+      </a>
+      <button class="icon-btn magnetic email-trigger" data-email="gokulrech@gmail.com" aria-label="Show email address">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+      </button>
+      <a class="icon-btn magnetic" href="Gokulakannan_Cloud_DevOps_Engineer.pdf" download aria-label="Download Resume">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+      </a>
+      <a class="btn btn-primary btn-small magnetic" href="#contact">Deploy Status</a>
+    </div>
+  </div>
+</header>
+
+<div class="grid-overlay" id="gridOverlay"></div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-copy" data-reveal>
+      <div class="badge"><span class="badge-dot"></span>Open to opportunities</div>
+      <h1 class="hero-title" id="heroTitle"><span class="line">Infrastructure</span><span class="line">As Code.</span></h1>
+      <p class="hero-desc">Cloud &amp; DevOps Engineer architecting resilient, scalable, and secure AWS &amp; Azure environments — CI/CD pipeline design, Terraform, containers, and cost-optimized production infrastructure for multi-service SaaS platforms.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary magnetic" href="#architectures">Initialize Deploy</a>
+        <a class="btn btn-outline magnetic" href="#experience">View Logs</a>
+        <a class="btn btn-outline magnetic" href="Gokulakannan_Cloud_DevOps_Engineer.pdf" download>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+          Download Resume
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual" data-reveal>
+      <div class="mascot-stage" id="mascotStage">
+        <div class="orbit-ring r2"></div>
+        <div class="orbit-ring r1"></div>
+
+        <!-- collectible badge #1 -->
+        <div class="collectible" data-collectible style="top:8%; left:6%; animation-delay:.2s;" title="A floating badge — click it">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#dcffdc" stroke-width="1.8"><path d="M4 15a4 4 0 0 1 1-7.9A5 5 0 0 1 14.9 6 4.5 4.5 0 0 1 19 15H6z"/></svg>
+        </div>
+
+        <div class="mascot-wrap" id="mascot" role="button" tabindex="0" aria-label="Drag or click the mascot to say hi">
+          <div class="speech-bubble" id="speechBubble">Hey, I'm Gokul-bot 👋</div>
+          <svg class="mascot-svg" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="100" cy="205" rx="52" ry="9" fill="#00131a" opacity=".35"/>
+            <!-- antenna -->
+            <line x1="100" y1="18" x2="100" y2="4" stroke="#3b494b" stroke-width="3"/>
+            <circle class="mascot-antenna-light" cx="100" cy="6" r="5" fill="#dcffdc"/>
+            <!-- body -->
+            <rect x="58" y="120" width="84" height="66" rx="20" fill="#151b2c" stroke="#3b494b" stroke-width="2"/>
+            <rect x="80" y="140" width="40" height="26" rx="6" fill="#0d1322" stroke="#2a3350" stroke-width="1.5"/>
+            <circle class="mascot-antenna-light" cx="100" cy="153" r="6" fill="#00dbe9" opacity=".8"/>
+            <!-- arms -->
+            <rect x="40" y="128" width="18" height="40" rx="9" fill="#151b2c" stroke="#3b494b" stroke-width="2"/>
+            <rect x="142" y="128" width="18" height="40" rx="9" fill="#151b2c" stroke="#3b494b" stroke-width="2"/>
+            <circle cx="49" cy="172" r="9" fill="#1c2338" stroke="#3b494b" stroke-width="2"/>
+            <circle cx="151" cy="172" r="9" fill="#1c2338" stroke="#3b494b" stroke-width="2"/>
+            <!-- head -->
+            <rect class="mascot-draw" x="52" y="18" width="96" height="82" rx="28" fill="#1c2338" stroke="#3b494b" stroke-width="2.5"/>
+            <rect x="64" y="40" width="72" height="34" rx="17" fill="#062226"/>
+            <rect class="mascot-draw mascot-visor-glow" x="64" y="40" width="72" height="34" rx="17" fill="none" stroke="#00dbe9" stroke-width="1.5"/>
+            <ellipse class="mascot-eye left" cx="86" cy="57" rx="8" ry="9" fill="#dbfcff" style="transform-origin:86px 57px;"/>
+            <ellipse class="mascot-eye right" cx="114" cy="57" rx="8" ry="9" fill="#dbfcff" style="transform-origin:114px 57px;"/>
+            <path class="mascot-draw" d="M84 84q16 10 32 0" stroke="#00dbe9" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <!-- cheek panel details -->
+            <rect x="58" y="24" width="6" height="18" rx="3" fill="#ebb2ff" opacity=".7"/>
+            <rect x="136" y="24" width="6" height="18" rx="3" fill="#ebb2ff" opacity=".7"/>
+          </svg>
+          <div class="mascot-hint">drag me · click me</div>
+        </div>
+
+        <!-- collectible badge #2 -->
+        <div class="collectible" data-collectible style="bottom:10%; right:4%; animation-delay:1s;" title="A floating badge — click it">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ebb2ff" stroke-width="1.8"><path d="M4 4l7 4v8l-7-4V4z"/><path d="M13 4l7 4-7 4-7-4 7-4z" opacity=".5"/><path d="M13 12l7-4v8l-7 4v-8z"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE TICKER -->
+  <div class="marquee" data-reveal aria-hidden="true">
+    <div class="marquee-track" id="marqueeTrack">
+      <span>AWS</span><span class="dot-sep">•</span><span>AZURE</span><span class="dot-sep">•</span><span>TERRAFORM</span><span class="dot-sep">•</span><span>DOCKER</span><span class="dot-sep">•</span><span>JENKINS</span><span class="dot-sep">•</span><span>GITHUB ACTIONS</span><span class="dot-sep">•</span><span>KMS</span><span class="dot-sep">•</span><span>PYTHON</span><span class="dot-sep">•</span>
+      <span>AWS</span><span class="dot-sep">•</span><span>AZURE</span><span class="dot-sep">•</span><span>TERRAFORM</span><span class="dot-sep">•</span><span>DOCKER</span><span class="dot-sep">•</span><span>JENKINS</span><span class="dot-sep">•</span><span>GITHUB ACTIONS</span><span class="dot-sep">•</span><span>KMS</span><span class="dot-sep">•</span><span>PYTHON</span><span class="dot-sep">•</span>
+    </div>
+  </div>
+
+  <!-- CONSOLE -->
+  <section class="console" data-reveal>
+    <div class="console-bar">
+      <div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div>
+      <span class="console-path">gokul@devops-core:~</span>
+    </div>
+    <div class="console-body">
+      <div class="console-line"><span class="prompt-arrow">➜</span><span class="prompt-path">~</span><span class="prompt-cmd">./whoami.sh</span></div>
+      <div id="terminalOutput"></div>
+    </div>
+  </section>
+
+  <!-- CORE STACK -->
+  <section class="stack" id="stack" data-reveal>
+    <div class="section-head">
+      <h2>Core Architecture Stack</h2>
+      <p>The tools behind three years of production cloud infrastructure, CI/CD, and multi-cloud migration.</p>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dbfcff" stroke-width="1.6"><path d="M4 15a4 4 0 0 1 1-7.9A5 5 0 0 1 14.9 6 4.5 4.5 0 0 1 19 15H6z"/></svg></div>
+        <span>AWS</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dbfcff" stroke-width="1.6"><path d="M9 3h5l-6 12h8l-10 6 4-9H6l3-9z"/></svg></div>
+        <span>Azure</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ebb2ff" stroke-width="1.6"><path d="M4 4l7 4v8l-7-4V4z"/><path d="M13 4l7 4-7 4-7-4 7-4z" opacity=".5"/><path d="M13 12l7-4v8l-7 4v-8z"/></svg></div>
+        <span>Terraform</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dcffdc" stroke-width="1.6"><rect x="3" y="10" width="4" height="4"/><rect x="8" y="10" width="4" height="4"/><rect x="13" y="10" width="4" height="4"/><rect x="8" y="5" width="4" height="4"/><path d="M2 14c0 4 3.5 6 8.5 6 6 0 9.5-3 10.5-7-1 .5-2 .5-3 0"/></svg></div>
+        <span>Docker / ECS</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dbfcff" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></div>
+        <span>Jenkins / Actions</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ebb2ff" stroke-width="1.6"><path d="M8 3h5l6 6v9a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M9 12h6M9 16h6M9 8h2"/></svg></div>
+        <span>Python</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dbfcff" stroke-width="1.6"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></div>
+        <span>MySQL</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dcffdc" stroke-width="1.6"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M6 8.5v7M8.3 7l7.4 3.7M8.3 17l7.4-3.7"/></svg></div>
+        <span>Git &amp; Bitbucket</span>
+      </div>
+      <div class="stack-card tilt-card" data-reveal-child>
+        <div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00dbe9" stroke-width="1.6"><circle cx="4" cy="12" r="2.3"/><circle cx="12" cy="6" r="2.3"/><circle cx="12" cy="18" r="2.3"/><circle cx="20" cy="12" r="2.3"/><path d="M6.2 11l3.6-3.6M6.2 13l3.6 3.6M14.2 7.4l3.6 3.6M14.2 16.6l3.6-3.6"/></svg></div>
+        <span>Bitbucket Pipelines</span>
+      </div>
+    </div>
+
+    <!-- collectible badge #3 -->
+    <div class="collectible" data-collectible style="top:6%; right:2%; animation-delay:.6s; position:absolute;" title="A floating badge — click it">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00dbe9" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+    </div>
+  </section>
+
+  <!-- FULL SKILL MANIFEST -->
+  <section class="skills" id="skills" data-reveal>
+    <div class="section-head">
+      <h2>Full Skill Manifest</h2>
+      <p>Every tool and service in active rotation, grouped by domain.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#dbfcff"></span>Cloud — AWS</h3>
+        <div class="chip-row">
+          <span class="chip">EC2</span><span class="chip">Lightsail</span><span class="chip">ECS / Fargate</span>
+          <span class="chip">ECR</span><span class="chip">Lambda</span><span class="chip">API Gateway</span>
+          <span class="chip">S3</span><span class="chip">RDS (MySQL)</span><span class="chip">VPC</span>
+          <span class="chip">IAM</span><span class="chip">KMS</span><span class="chip">WAF</span>
+          <span class="chip">CloudFront</span><span class="chip">Route53</span><span class="chip">ACM</span>
+          <span class="chip">SES</span><span class="chip">EventBridge</span><span class="chip">CloudWatch</span>
+          <span class="chip">Cognito</span><span class="chip">Parameter Store</span><span class="chip">Elastic Beanstalk</span>
+          <span class="chip">ALB</span><span class="chip">Auto Scaling</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#ebb2ff"></span>Cloud — Azure</h3>
+        <div class="chip-row">
+          <span class="chip">Front Door (CDN)</span><span class="chip">VM Scale Sets</span>
+          <span class="chip">Postgres Flexible Server</span><span class="chip">Blob Storage</span>
+          <span class="chip">Container Registry</span><span class="chip">Entra ID</span>
+          <span class="chip">Key Vault</span><span class="chip">Log Analytics</span>
+          <span class="chip">Virtual Machines</span><span class="chip">Networking</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#dcffdc"></span>IaC &amp; CI/CD</h3>
+        <div class="chip-row">
+          <span class="chip">Terraform</span><span class="chip">Bitbucket Pipelines</span>
+          <span class="chip">Jenkins</span><span class="chip">GitHub Actions</span>
+          <span class="chip">Blue-Green Deploys</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#00dbe9"></span>Containers</h3>
+        <div class="chip-row">
+          <span class="chip">Docker</span><span class="chip">ECS / ECR (Fargate)</span>
+          <span class="chip">Image Size Optimization</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#dbfcff"></span>Monitoring &amp; Logging</h3>
+        <div class="chip-row">
+          <span class="chip">AWS CloudWatch</span><span class="chip">Azure Log Analytics</span>
+          <span class="chip">Google Analytics</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#ebb2ff"></span>Security &amp; IAM</h3>
+        <div class="chip-row">
+          <span class="chip">Least-Privilege IAM</span><span class="chip">KMS Key Rotation</span>
+          <span class="chip">WAF</span><span class="chip">SSL / TLS</span>
+          <span class="chip">OAuth2 / OIDC</span><span class="chip">VPC Security Groups</span><span class="chip">VPN</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#dcffdc"></span>Scripting &amp; Automation</h3>
+        <div class="chip-row">
+          <span class="chip">Python</span><span class="chip">Bash</span>
+          <span class="chip">AWS Automation</span><span class="chip">ETL</span>
+          <span class="chip">Webhooks</span><span class="chip">CLI Utilities</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#00dbe9"></span>Databases</h3>
+        <div class="chip-row">
+          <span class="chip">MySQL</span><span class="chip">Azure Postgres Flexible</span><span class="chip">AWS RDS</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#dbfcff"></span>Web Servers &amp; OS</h3>
+        <div class="chip-row">
+          <span class="chip">Nginx</span><span class="chip">Apache</span><span class="chip">PM2</span><span class="chip">Linux Administration</span>
+        </div>
+      </div>
+
+      <div class="skill-group tilt-card" data-reveal-child>
+        <h3><span class="skill-dot" style="background:#ebb2ff"></span>Version Control</h3>
+        <div class="chip-row">
+          <span class="chip">Git</span><span class="chip">Bitbucket</span><span class="chip">GitHub</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METRICS -->
+  <section class="metrics" data-reveal>
+    <div class="metrics-grid">
+      <div class="metric-card" data-reveal-child>
+        <div class="metric-value"><span data-count-to="45">0</span>%</div>
+        <div class="metric-label">AWS Cost Reduction</div>
+        <div class="metric-sub">~$3,000 → $1,500–1,700/mo via right-sizing &amp; scheduled non-prod environments.</div>
+      </div>
+      <div class="metric-card" data-reveal-child>
+        <div class="metric-value"><span data-count-to="80">0</span>%</div>
+        <div class="metric-label">Faster Deployments</div>
+        <div class="metric-sub">CI/CD re-engineering cut release cycles from ~4 hrs manual to 45–50 min automated.</div>
+      </div>
+      <div class="metric-card" data-reveal-child>
+        <div class="metric-value"><span data-count-to="70">0</span>%</div>
+        <div class="metric-label">Less Manual File-Ops</div>
+        <div class="metric-sub">Lambda-based S3 inter-bucket transfer &amp; cleanup automation.</div>
+      </div>
+      <div class="metric-card" data-reveal-child>
+        <div class="metric-value"><span data-count-to="25">0</span>%</div>
+        <div class="metric-label">MySQL Storage Cut</div>
+        <div class="metric-sub">Schema normalization, archival, and growth-trend analysis.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="projects" id="architectures" data-reveal>
+    <div class="section-head left">
+      <svg width="25" height="23" viewBox="0 0 24 24" fill="none" stroke="#dbfcff" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <h2>Deployed Architectures</h2>
+    </div>
+    <div class="bento">
+      <div class="card card-featured tilt-card" data-project="harvesteye" role="button" tabindex="0" aria-label="View HarvestEye Portal details" data-reveal-child>
+        <div class="bg-art" style="background:
+          radial-gradient(circle at 30% 20%, rgba(0,219,233,0.35), transparent 45%),
+          radial-gradient(circle at 80% 60%, rgba(235,178,255,0.25), transparent 50%),
+          linear-gradient(135deg,#0d1a2e,#131a2b);"></div>
+        <div class="bg-grad"></div>
+        <span class="tag tag-purple">Production</span>
+        <div class="card-body-rel">
+          <h3>HarvestEye Portal — Agricultural IoT &amp; Analytics</h3>
+          <p class="desc">End-to-end AWS production architecture: CloudFront + S3 frontend, Lightsail/Django backend, RDS MySQL, and a dedicated ETL server processing field-device data — with multi-tenant IAM/KMS auth and blue-green CI/CD.</p>
+          <div class="chip-row">
+            <span class="chip">EC2 / Lightsail</span>
+            <span class="chip">Lambda + ECS</span>
+            <span class="chip">Terraform</span>
+            <span class="chip">KMS / WAF</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-small tilt-card" data-project="twellr" role="button" tabindex="0" aria-label="View Twellr.ai details" data-reveal-child>
+        <div class="top-row">
+          <div class="card-small-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dbfcff" stroke-width="1.6"><path d="M9 3h5l-6 12h8l-10 6 4-9H6l3-9z"/></svg></div>
+          <span class="tag tag-mint">Migrated</span>
+        </div>
+        <div>
+          <h3>Twellr.ai — AWS → Azure Migration</h3>
+          <p>Led full infrastructure migration for an AI wellness platform: Elastic Beanstalk → VM Scale Sets, Cognito → Entra ID, Parameter Store → Key Vault, with per-service GitHub Actions CI/CD.</p>
+        </div>
+      </div>
+
+      <div class="card card-small tilt-card" data-project="supplier" role="button" tabindex="0" aria-label="View Supplier Portal details" data-reveal-child>
+        <div class="top-row">
+          <div class="card-small-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ebb2ff" stroke-width="1.6"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        </div>
+        <div>
+          <h3>Supplier Portal — Production Deployed</h3>
+          <p>Least-privilege IAM design, ALB/ACM/Route53 TLS termination, and a VPN-based ETL pipeline syncing an external customer database into the app with auto-generated PDF reporting.</p>
+        </div>
+      </div>
+
+      <div class="card card-code tilt-card" data-reveal-child>
+        <div class="console-bar">
+          <div class="dots"><span class="dot" style="background:#2f3445"></span><span class="dot" style="background:#2f3445"></span><span class="dot" style="background:#2f3445"></span></div>
+          <span class="console-path">deploy.tf</span>
+        </div>
+        <div class="code-body">
+<pre><span class="kw">resource</span> <span class="str">"aws_lambda_function"</span> <span class="str2">"kms_rotation"</span> {
+  function_name = <span class="str2">"api-token-rotator"</span>
+  runtime       = <span class="str2">"python3.12"</span>
+  handler       = <span class="str2">"rotate.handler"</span>
+}
+
+<span class="kw">resource</span> <span class="str">"aws_cloudwatch_event_rule"</span> <span class="str2">"rotation_schedule"</span> {
+  schedule_expression = <span class="str2">"rate(30 days)"</span>
+}
+
+<span class="kw">module</span> <span class="str2">"blue_green_deploy"</span> {
+  source        = <span class="str2">"./modules/bluegreen"</span>
+  health_check  = <span class="kw">true</span>
+  swap_on_pass  = <span class="kw">true</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE LOG -->
+  <section class="experience" id="experience" data-reveal>
+    <div class="section-head">
+      <h2>Deployment Log</h2>
+      <p>A running record of the roles and systems shaped along the way.</p>
+    </div>
+    <div class="log">
+      <div class="log-entry" data-reveal-child>
+        <div class="log-time">JAN 2023 — PRESENT</div>
+        <div class="log-role">DevOps &amp; Cloud Engineer</div>
+        <div class="log-org">B-Sec Technologies Private Limited · Trichy, India</div>
+        <ul class="log-points">
+          <li>Own production AWS &amp; Azure architecture across three platforms — HarvestEye, Twellr.ai, and Supplier Portal.</li>
+          <li>Re-engineered CI/CD with Bitbucket Pipelines and GitHub Actions using blue-green (health-check-and-swap) deployments.</li>
+          <li>Designed multi-tenant IAM/KMS authentication, least-privilege security groups, and WAF policies.</li>
+          <li>Built reusable Python automation for AWS operations, ETL, webhooks, and scheduled reporting pipelines.</li>
+        </ul>
+      </div>
+      <div class="log-entry" data-reveal-child>
+        <div class="log-time">AUG 2019 — JUN 2023</div>
+        <div class="log-role">B.E. Electronics &amp; Communication Engineering</div>
+        <div class="log-org">Karpagam College of Engineering · Coimbatore, India</div>
+        <ul class="log-points">
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <!-- collectible badge #4 -->
+  <div class="collectible" data-collectible style="top:16px; left:50%; animation-delay:1.4s;" title="A floating badge — click it">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dcffdc" stroke-width="1.8"><path d="M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 16.9 6.1 20l1.3-6.5-4.9-4.6 6.6-.8L12 2z"/></svg>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2026 GOKULAKANNAN_RC // SYSTEM_READY</div>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/gokulakannan" target="_blank" rel="noopener">LinkedIn</a>
+      <button class="email-trigger" data-email="gokulrech@gmail.com" style="font-family:var(--font-mono); font-size:14px; color:var(--text-muted); opacity:.85;">Email</button>
+      <a href="tel:+919445734347">+91 94457 34347</a>
+      <a class="status" href="#stack">Trichy, India — Available</a>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="projectModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <span class="tag modal-tag" id="modalTag"></span>
+    <h3 id="modalTitle"></h3>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="chip-row" id="modalChips"></div>
+    <ul class="modal-points" id="modalPoints"></ul>
+  </div>
+</div>
+
+<div class="email-popover" id="emailPopover"></div>
+
+<script src="script.js" defer></script>
+
+</body>
+</html>
