@@ -5,6 +5,18 @@ import { RoomEnvironment } from './assets/vendor/RoomEnvironment.js';
 const host=document.querySelector('.hero-visual');
 const canvas=document.getElementById('character-canvas');
 const status=document.getElementById('model-status');
+const greeting=document.getElementById('bot-greeting');
+const greetingText=document.getElementById('bot-greeting-text');
+let greetingCount=0,greetingTimer,onGreet=()=>{};
+const greet=()=>{
+ greetingText.textContent=greetingCount++%2===0?'Vanakkam! 👋':'Hi! 👋';
+ greeting.hidden=false;
+ clearTimeout(greetingTimer);
+ greetingTimer=setTimeout(()=>{greeting.hidden=true},5000);
+ onGreet();
+};
+// The illustrated fallback can say hello too when WebGL is unavailable.
+document.getElementById('bot-fallback-button').addEventListener('click',greet);
 try {
  // A compact product-render setup: soft studio reflections, restrained highlights,
  // and distinct ceramic, painted aluminium, rubber and optical-glass surfaces.
@@ -155,7 +167,8 @@ try {
  }
  const baseTrim=ring(1.455,.009,metal,scene,[0,-1.566,0]);baseTrim.rotation.x=Math.PI/2;
  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
- let paused=reduce.matches,inView=true,dragging=false,lastX=0,lastY=0,targetY=-.28,targetX=.04,yaw=-.28,pitch=.04,spinRemaining=0,time=0,lastFrame=0,lastInteraction=0,pointerX=0,pointerY=0,pointerActive=false,gazeX=0,gazeY=0;
+ let paused=reduce.matches,inView=true,dragging=false,lastX=0,lastY=0,targetY=-.28,targetX=.04,yaw=-.28,pitch=.04,spinRemaining=0,time=0,lastFrame=0,lastInteraction=0,pointerX=0,pointerY=0,pointerActive=false,gazeX=0,gazeY=0,waveElapsed=Infinity,pressX=0,pressY=0,pressMoved=false;
+ onGreet=()=>{if(!paused&&!reduce.matches)waveElapsed=0};
  const pauseButton=document.getElementById('model-pause');
  function syncPause(){pauseButton.setAttribute('aria-pressed',String(paused));pauseButton.innerHTML=paused?'▶ <span>Play</span>':'Ⅱ <span>Pause</span>';pauseButton.setAttribute('aria-label',paused?'Play idle animation':'Pause idle animation');}
  syncPause();reduce.addEventListener('change',()=>{paused=reduce.matches;syncPause()});
@@ -174,10 +187,24 @@ try {
  window.addEventListener('scroll',updateCanvasBounds,{passive:true});
  const resize=()=>{updateCanvasBounds();const r=canvas.parentElement.getBoundingClientRect();if(!r.width||!r.height)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.position.z=camera.aspect<.85?9.6:8.6;camera.updateProjectionMatrix();renderer.render(scene,camera)};
  new ResizeObserver(resize).observe(canvas.parentElement);
- const reset=()=>{targetY=-.28;targetX=.04;spinRemaining=0;pointerActive=false;gazeX=gazeY=0;headPivot.rotation.set(0,0,0);eyeRig.position.set(0,0,0);status.textContent='Character view reset.'};
- canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;lastX=e.clientX;lastY=e.clientY;spinRemaining=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging');lastInteraction=performance.now()});
- canvas.addEventListener('pointermove',e=>{if(dragging){targetY+=(e.clientX-lastX)*.012;targetX=THREE.MathUtils.clamp(targetX+(e.clientY-lastY)*.006,-.4,.4);lastX=e.clientX;lastY=e.clientY;lastInteraction=performance.now()}});
- const endDrag=()=>{dragging=false;canvas.classList.remove('dragging');lastInteraction=performance.now()};canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);canvas.addEventListener('lostpointercapture',endDrag);
+ const reset=()=>{targetY=-.28;targetX=.04;spinRemaining=0;waveElapsed=Infinity;greeting.hidden=true;clearTimeout(greetingTimer);pointerActive=false;gazeX=gazeY=0;headPivot.rotation.set(0,0,0);eyeRig.position.set(0,0,0);status.textContent='Character view reset.'};
+ canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;pressX=lastX=e.clientX;pressY=lastY=e.clientY;pressMoved=false;spinRemaining=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging');lastInteraction=performance.now()});
+ canvas.addEventListener('pointermove',e=>{if(dragging){if(Math.hypot(e.clientX-pressX,e.clientY-pressY)>8)pressMoved=true;targetY+=(e.clientX-lastX)*.012;targetX=THREE.MathUtils.clamp(targetX+(e.clientY-lastY)*.006,-.4,.4);lastX=e.clientX;lastY=e.clientY;lastInteraction=performance.now()}});
+ // Greet on a short tap directly on the robot, not a drag or the stage background.
+ const raycaster=new THREE.Raycaster(),tapPoint=new THREE.Vector2();
+ const endDrag=()=>{dragging=false;canvas.classList.remove('dragging');lastInteraction=performance.now()};
+ canvas.addEventListener('pointerup',e=>{
+   const tapped=dragging&&!pressMoved&&Math.hypot(e.clientX-pressX,e.clientY-pressY)<=8;
+   endDrag();
+   if(!tapped)return;
+   updateCanvasBounds();
+   tapPoint.set((e.clientX-canvasBounds.left)/canvasBounds.width*2-1,-(e.clientY-canvasBounds.top)/canvasBounds.height*2+1);
+   camera.updateMatrixWorld();robot.updateMatrixWorld(true);
+   raycaster.setFromCamera(tapPoint,camera);
+   if(raycaster.intersectObject(robot,true).length)greet();
+ });
+ canvas.addEventListener('pointercancel',endDrag);canvas.addEventListener('lostpointercapture',endDrag);
+ canvas.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();if(!e.repeat)greet()}});
  canvas.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(e.key)){e.preventDefault();lastInteraction=performance.now();if(e.key==='ArrowLeft')targetY-=.25;if(e.key==='ArrowRight')targetY+=.25;if(e.key==='ArrowUp')targetX=Math.max(-.4,targetX-.12);if(e.key==='ArrowDown')targetX=Math.min(.4,targetX+.12);if(e.key==='Home')reset()}});
  document.getElementById('model-spin').addEventListener('click',()=>{spinRemaining=Math.PI*2;status.textContent='Spinning Gokul-bot through 360 degrees.'});
  pauseButton.addEventListener('click',()=>{paused=!paused;syncPause();status.textContent=paused?'Idle animation paused. Drag to rotate.':'Idle animation playing.'});document.getElementById('model-reset').addEventListener('click',reset);
@@ -204,6 +231,11 @@ try {
  gazeX+=(lookX-gazeX)*eyeSmoothing;gazeY+=(lookY-gazeY)*eyeSmoothing;
  eyeRig.position.set(gazeX*.095,-gazeY*.065,0);
  arms[0].rotation.z=-.12+(!paused?Math.sin(time*1.5)*.025:0);arms[1].rotation.z=.12+(!paused?Math.sin(time*1.5+1)*.025:0);
+ if(!paused&&!reduce.matches&&waveElapsed<1.8){
+   waveElapsed=Math.min(waveElapsed+dt,1.8);
+   const lift=Math.sin(Math.PI*waveElapsed/1.8);
+   arms[1].rotation.z+=lift*(2.05+Math.sin(waveElapsed*17)*.18);
+ }
  const blink=!paused&&time%5.2>5.03?.15:1;eyes.forEach(e=>e.scale.y=blink);
  renderer.render(scene,camera);
  });

@@ -52,3 +52,5 @@ The refined robot uses separate ceramic, painted-metal, rubber, and glass materi
 Toolkit brand icons are local SVG assets from [Devicon v2.17.0](https://github.com/devicons/devicon/tree/v2.17.0), covering AWS, Azure, Docker, Terraform, Python, GitHub Actions, Kubernetes, and Jenkins. Devicon’s MIT license is included in `assets/icons/DEVICON-LICENSE.txt`; brand marks belong to their respective owners.
 
 Gokul-bot now has a visible neck with a swivel pivot. Mouse and pen movement anywhere in the viewport guides its head and eyes relative to the robot’s screen position. Eyes lead the smoothly damped head turn; leaving the page returns the gaze to neutral. Tracking yields to drag/spin controls, pauses with the animation, and respects reduced-motion preferences.
+
+Tap or click directly on the 3D robot to alternate “Vanakkam!” and “Hi!” in a short greeting bubble, with a small wave when animation is enabled. Enter or Space greets from the focused model; dragging and background clicks do not trigger greetings. The illustrated fallback supports the same greeting bubble.
