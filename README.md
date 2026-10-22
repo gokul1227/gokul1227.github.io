@@ -7,7 +7,7 @@ A responsive Creative Editorial portfolio for [gokul1227.github.io](https://goku
 - Warm cream, charcoal, and orange design with editorial typography and scroll reveals.
 - Hero, About, Expertise, Projects, Results, Experience, Education, and Contact.
 - Resume-backed HarvestEye, Twellr.ai, and Supplier Portal case studies with project filters.
-- Real Three.js robot with glossy materials, drag/touch and keyboard rotation, 360° spin, pause, and reset controls.
+- Real Three.js robot with satin ceramic panels, painted metal, a recessed glass faceplate, articulated fingers, mechanical joints, and soft contact shadows. Includes drag/touch and keyboard rotation, 360° spin, pause, and reset controls.
 - An animated SVG robot fallback when WebGL is unavailable, including this environment's preview browser.
 - Reduced-motion support, keyboard navigation, accessible modal dialogs, and mobile navigation.
 - Latest supplied resume PDF, downloadable from the header, experience section, and contact section.
@@ -46,3 +46,5 @@ Three.js **0.170.0**, `RoundedBoxGeometry`, and `RoomEnvironment` are included u
 ## Verification
 
 JavaScript syntax and local asset/anchor checks passed. Desktop and narrow-screen layouts, mobile navigation, project filtering, and case-study dialogs were checked in the preview browser. WebGL is disabled in that browser, so live 3D rendering could not be visually verified there; the fallback was verified instead. The robot geometry was checked for finite coordinates in the preceding implementation.
+
+The refined robot uses separate ceramic, painted-metal, rubber, and glass materials; recessed rounded screen panels; mechanical assembly details; restrained idle motion; and soft contact shadows. Geometry and spin, pause, reset, keyboard, drag, and context-restoration paths passed a CPU runtime check. GPU rendering remains unverified in the WebGL-disabled preview environment.
