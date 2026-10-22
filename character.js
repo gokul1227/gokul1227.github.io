@@ -62,8 +62,11 @@ try {
  box(1.16,1.08,.84,.23,rubber,robot,[0,-.45,-.025]);
  box(1.14,1.06,.55,.22,accent,robot,[0,-.45,.145]);
  box(1.12,1.04,.3,.2,shell,robot,[0,-.45,-.31]);
- cylinder(.21,.22,joint,robot,[0,.17,0]);
- for(let y=.1;y<.25;y+=.045)cylinder(.225,.018,rubber,robot,[0,y,0]);
+  // Leave a real gap above the torso, with a visible neck and swivel joint.
+ cylinder(.2,.045,metal,robot,[0,.105,0]);
+ cylinder(.13,.2,joint,robot,[0,.22,0]);
+ for(let y=.145;y<.29;y+=.045)cylinder(.145,.018,rubber,robot,[0,y,0]);
+ ball(.115,metal,robot,[0,.315,0]);
  // Recessed ceramic badge with a machined frame and small status indicators.
  box(.76,.66,.045,.13,rubber,robot,[0,-.4,.427]);
  box(.71,.61,.055,.12,metal,robot,[0,-.4,.446]);
@@ -74,7 +77,9 @@ try {
  box(.12,.017,.025,.007,glow,robot,[0,-.79,.438]);
  for(const x of [-.43,.43])for(const y of [-.12,-.77])screw(robot,x,y,.419);
  for(let i=0;i<4;i++)box(.06,.015,.025,.006,rubber,robot,[-.12+i*.08,-.61,.508]);
- const head=new THREE.Group();head.position.y=.72;robot.add(head);
+ // Turn around the neck joint rather than through the middle of the face.
+ const headPivot=new THREE.Group();headPivot.name='head-pivot';headPivot.position.y=.3;headPivot.rotation.order='YXZ';robot.add(headPivot);
+ const head=new THREE.Group();head.name='head-shell';head.position.y=.74;headPivot.add(head);
  box(1.9,1.35,1.16,.36,rubber,head,[0,0,-.025]);
  box(1.91,1.37,.78,.35,shell,head,[0,0,.2]);
  box(1.87,1.33,.42,.2,shell,head,[0,0,-.42]);
@@ -82,8 +87,9 @@ try {
  box(1.65,1.02,.1,.21,joint,head,[0,-.015,.598]);
  box(1.59,.96,.075,.2,rubber,head,[0,-.015,.65]);
  box(1.52,.89,.06,.19,glass,head,[0,-.015,.693]);
+ const eyeRig=new THREE.Group();eyeRig.name='eye-rig';head.add(eyeRig);
  const eyes=[];
- for(const x of [-.34,.34])eyes.push(box(.115,.235,.012,.052,glow,head,[x,.035,.73]));
+ for(const x of [-.34,.34])eyes.push(box(.115,.235,.012,.052,glow,eyeRig,[x,.035,.73]));
  const smileCurve=new THREE.QuadraticBezierCurve3(new THREE.Vector3(-.15,-.19,.732),new THREE.Vector3(0,-.3,.736),new THREE.Vector3(.15,-.19,.732));
  mesh(new THREE.TubeGeometry(smileCurve,32,.014,8,false),glow,head);
  // Camera lens, microphone perforations and tiny fasteners at real assembly points.
@@ -149,16 +155,29 @@ try {
  }
  const baseTrim=ring(1.455,.009,metal,scene,[0,-1.566,0]);baseTrim.rotation.x=Math.PI/2;
  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
- let paused=reduce.matches,inView=true,dragging=false,lastX=0,lastY=0,targetY=-.28,targetX=.04,yaw=-.28,pitch=.04,spinRemaining=0,time=0,lastFrame=0,lastInteraction=0,pointerX=0,pointerY=0;
+ let paused=reduce.matches,inView=true,dragging=false,lastX=0,lastY=0,targetY=-.28,targetX=.04,yaw=-.28,pitch=.04,spinRemaining=0,time=0,lastFrame=0,lastInteraction=0,pointerX=0,pointerY=0,pointerActive=false,gazeX=0,gazeY=0;
  const pauseButton=document.getElementById('model-pause');
  function syncPause(){pauseButton.setAttribute('aria-pressed',String(paused));pauseButton.innerHTML=paused?'▶ <span>Play</span>':'Ⅱ <span>Pause</span>';pauseButton.setAttribute('aria-label',paused?'Play idle animation':'Pause idle animation');}
  syncPause();reduce.addEventListener('change',()=>{paused=reduce.matches;syncPause()});
- const resize=()=>{const r=canvas.parentElement.getBoundingClientRect();if(!r.width||!r.height)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.position.z=camera.aspect<.85?9.6:8.6;camera.updateProjectionMatrix();renderer.render(scene,camera)};
+ // Cache the canvas bounds, then project the head to screen coordinates. This
+ // makes the gaze follow the mouse anywhere in the viewport, relative to the bot.
+ let canvasBounds=canvas.getBoundingClientRect();
+ const headScreen=new THREE.Vector3();
+ const updateCanvasBounds=()=>{canvasBounds=canvas.getBoundingClientRect()};
+ const clearGaze=()=>{pointerActive=false};
+ window.addEventListener('pointermove',e=>{
+   if(e.pointerType==='touch')return;
+   pointerX=e.clientX;pointerY=e.clientY;pointerActive=true;
+ },{passive:true});
+ document.addEventListener('pointerleave',clearGaze);
+ window.addEventListener('blur',clearGaze);
+ window.addEventListener('scroll',updateCanvasBounds,{passive:true});
+ const resize=()=>{updateCanvasBounds();const r=canvas.parentElement.getBoundingClientRect();if(!r.width||!r.height)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.position.z=camera.aspect<.85?9.6:8.6;camera.updateProjectionMatrix();renderer.render(scene,camera)};
  new ResizeObserver(resize).observe(canvas.parentElement);
- const reset=()=>{targetY=-.28;targetX=.04;spinRemaining=0;pointerX=pointerY=0;status.textContent='Character view reset.'};
+ const reset=()=>{targetY=-.28;targetX=.04;spinRemaining=0;pointerActive=false;gazeX=gazeY=0;headPivot.rotation.set(0,0,0);eyeRig.position.set(0,0,0);status.textContent='Character view reset.'};
  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;lastX=e.clientX;lastY=e.clientY;spinRemaining=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging');lastInteraction=performance.now()});
- canvas.addEventListener('pointermove',e=>{const rect=canvas.getBoundingClientRect();pointerX=((e.clientX-rect.left)/rect.width-.5);pointerY=((e.clientY-rect.top)/rect.height-.5);if(dragging){targetY+=(e.clientX-lastX)*.012;targetX=THREE.MathUtils.clamp(targetX+(e.clientY-lastY)*.006,-.4,.4);lastX=e.clientX;lastY=e.clientY;lastInteraction=performance.now()}});
- const endDrag=()=>{dragging=false;canvas.classList.remove('dragging');lastInteraction=performance.now()};canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);canvas.addEventListener('lostpointercapture',endDrag);canvas.addEventListener('pointerleave',()=>{pointerX=pointerY=0});
+ canvas.addEventListener('pointermove',e=>{if(dragging){targetY+=(e.clientX-lastX)*.012;targetX=THREE.MathUtils.clamp(targetX+(e.clientY-lastY)*.006,-.4,.4);lastX=e.clientX;lastY=e.clientY;lastInteraction=performance.now()}});
+ const endDrag=()=>{dragging=false;canvas.classList.remove('dragging');lastInteraction=performance.now()};canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);canvas.addEventListener('lostpointercapture',endDrag);
  canvas.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(e.key)){e.preventDefault();lastInteraction=performance.now();if(e.key==='ArrowLeft')targetY-=.25;if(e.key==='ArrowRight')targetY+=.25;if(e.key==='ArrowUp')targetX=Math.max(-.4,targetX-.12);if(e.key==='ArrowDown')targetX=Math.min(.4,targetX+.12);if(e.key==='Home')reset()}});
  document.getElementById('model-spin').addEventListener('click',()=>{spinRemaining=Math.PI*2;status.textContent='Spinning Gokul-bot through 360 degrees.'});
  pauseButton.addEventListener('click',()=>{paused=!paused;syncPause();status.textContent=paused?'Idle animation paused. Drag to rotate.':'Idle animation playing.'});document.getElementById('model-reset').addEventListener('click',reset);
@@ -169,7 +188,21 @@ try {
  const smoothing=reduce.matches?1:1-Math.exp(-dt*10);yaw+=(targetY-yaw)*smoothing;pitch+=(targetX-pitch)*smoothing;
  robot.rotation.y=yaw+(!paused&&!dragging?Math.sin(time*.5)*.07:0);robot.rotation.x=pitch;
  robot.position.y=paused?0:Math.sin(time*1.8)*.012;
- head.rotation.y=paused||dragging?0:pointerX*.12;head.rotation.x=paused||dragging?0:pointerY*.08;
+ // Eyes lead the turn slightly; the heavier head catches up at the neck.
+ // Keep rotations bounded so the shell clears the torso even at the extremes.
+ let lookX=0,lookY=0;
+ if(pointerActive&&!paused&&!reduce.matches&&!dragging&&spinRemaining<=0){
+   robot.updateMatrixWorld(true);head.getWorldPosition(headScreen);headScreen.project(camera);
+   const screenX=canvasBounds.left+(headScreen.x+1)*canvasBounds.width/2;
+   const screenY=canvasBounds.top+(1-headScreen.y)*canvasBounds.height/2;
+   lookX=THREE.MathUtils.clamp((pointerX-screenX)/Math.max(window.innerWidth*.45,300),-1,1);
+   lookY=THREE.MathUtils.clamp((pointerY-screenY)/Math.max(window.innerHeight*.45,220),-1,1);
+ }
+ const headSmoothing=1-Math.exp(-dt*5.5),eyeSmoothing=1-Math.exp(-dt*11);
+ headPivot.rotation.y+=(lookX*.55-headPivot.rotation.y)*headSmoothing;
+ headPivot.rotation.x+=(lookY*.22-headPivot.rotation.x)*headSmoothing;
+ gazeX+=(lookX-gazeX)*eyeSmoothing;gazeY+=(lookY-gazeY)*eyeSmoothing;
+ eyeRig.position.set(gazeX*.095,-gazeY*.065,0);
  arms[0].rotation.z=-.12+(!paused?Math.sin(time*1.5)*.025:0);arms[1].rotation.z=.12+(!paused?Math.sin(time*1.5+1)*.025:0);
  const blink=!paused&&time%5.2>5.03?.15:1;eyes.forEach(e=>e.scale.y=blink);
  renderer.render(scene,camera);

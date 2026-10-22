@@ -50,3 +50,5 @@ JavaScript syntax and local asset/anchor checks passed. Desktop and narrow-scree
 The refined robot uses separate ceramic, painted-metal, rubber, and glass materials; recessed rounded screen panels; mechanical assembly details; restrained idle motion; and soft contact shadows. Geometry and spin, pause, reset, keyboard, drag, and context-restoration paths passed a CPU runtime check. GPU rendering remains unverified in the WebGL-disabled preview environment.
 
 Toolkit brand icons are local SVG assets from [Devicon v2.17.0](https://github.com/devicons/devicon/tree/v2.17.0), covering AWS, Azure, Docker, Terraform, Python, GitHub Actions, Kubernetes, and Jenkins. Devicon’s MIT license is included in `assets/icons/DEVICON-LICENSE.txt`; brand marks belong to their respective owners.
+
+Gokul-bot now has a visible neck with a swivel pivot. Mouse and pen movement anywhere in the viewport guides its head and eyes relative to the robot’s screen position. Eyes lead the smoothly damped head turn; leaving the page returns the gaze to neutral. Tracking yields to drag/spin controls, pauses with the animation, and respects reduced-motion preferences.
