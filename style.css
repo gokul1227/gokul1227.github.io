@@ -3006,12 +3006,13 @@ body[data-theme=editorial] .hero-visual.three-ready>.three-stage {
 .bot-greeting {
   position:absolute;
   z-index:6;
-  left:16px;
-  top:64px;
-  max-width:calc(100% - 32px);
-  padding:15px 21px;
+  left:0;
+  top:0;
+  transform:translate3d(var(--greeting-x,0px),var(--greeting-y,0px),0) translate(-50%,-100%);
+  max-width:calc(100% - 16px);
+  padding:10px 16px;
   border:1px solid #d9c8b4;
-  border-radius:18px 18px 18px 4px;
+  border-radius:16px;
   background:#fffaf0;
   color:#242724;
   box-shadow:0 8px 28px #59402a12;
@@ -3023,15 +3024,23 @@ body[data-theme=editorial] .hero-visual.three-ready>.three-stage {
 }
 .bot-greeting>span {
   display:block;
-  font-size:23px;
+  font-size:20px;
+  line-height:1.2;
+  white-space:nowrap;
   font-weight:600;
   letter-spacing:-.6px;
 }
-.bot-greeting>small {
-  display:block;
-  margin-top:4px;
-  font-size:11px;
-  color:#70685d;
+.bot-greeting::after {
+  content:'';
+  position:absolute;
+  bottom:-5px;
+  left:calc(50% - 5px);
+  width:8px;
+  height:8px;
+  background:#fffaf0;
+  border-right:1px solid #d9c8b4;
+  border-bottom:1px solid #d9c8b4;
+  transform:rotate(45deg);
 }
 .bot-fallback-button {
   display:block;
@@ -3048,6 +3057,6 @@ body[data-theme=editorial] .hero-visual.three-ready>.three-stage {
   border-radius:24px;
 }
 @media (max-width:600px) {
-  .bot-greeting {top:42px;left:8px;padding:12px 16px}
-  .bot-greeting>span {font-size:20px}
+  .bot-greeting {padding:9px 14px}
+  .bot-greeting>span {font-size:18px}
 }

@@ -7,14 +7,34 @@ const canvas=document.getElementById('character-canvas');
 const status=document.getElementById('model-status');
 const greeting=document.getElementById('bot-greeting');
 const greetingText=document.getElementById('bot-greeting-text');
-let greetingCount=0,greetingTimer,onGreet=()=>{};
+let greetingTimer,onGreet=()=>{},greetingWidth=84,greetingHeight=44;
+// Place the compact bubble above an anchor, clamped inside the robot stage.
+const placeGreeting=(x,y,bounds,controls)=>{
+ const half=greetingWidth/2,margin=8;
+ x=Math.max(half+margin,Math.min(bounds.width-half-margin,x));
+ y=Math.max(greetingHeight+margin,Math.min(bounds.height-margin,y));
+ if(controls&&controls.width&&x+half>controls.left-bounds.left-margin&&x-half<controls.right-bounds.left+margin&&y>controls.top-bounds.top-margin&&y-greetingHeight<controls.bottom-bounds.top+margin){
+   const leftSlot=controls.left-bounds.left-half-12;
+   if(leftSlot>=half+margin)x=leftSlot;
+   else y=controls.bottom-bounds.top+greetingHeight+12;
+ }
+ greeting.style.setProperty('--greeting-x',`${x}px`);
+ greeting.style.setProperty('--greeting-y',`${y}px`);
+};
+let positionGreeting=()=>{
+ const bounds=host.getBoundingClientRect();
+ const image=document.querySelector('.character-fallback img').getBoundingClientRect();
+ placeGreeting(image.left-bounds.left+image.width*.5,image.top-bounds.top+image.height*.14-12,bounds);
+};
 const greet=()=>{
- greetingText.textContent=greetingCount++%2===0?'Vanakkam! 👋':'Hi! 👋';
+ greetingText.textContent='Hi! 👋';
  greeting.hidden=false;
+ greetingWidth=greeting.offsetWidth;greetingHeight=greeting.offsetHeight;
+ onGreet();positionGreeting();
  clearTimeout(greetingTimer);
  greetingTimer=setTimeout(()=>{greeting.hidden=true},5000);
- onGreet();
 };
+window.addEventListener('resize',()=>{if(!greeting.hidden)positionGreeting()},{passive:true});
 // The illustrated fallback can say hello too when WebGL is unavailable.
 document.getElementById('bot-fallback-button').addEventListener('click',greet);
 try {
@@ -168,15 +188,20 @@ try {
  const baseTrim=ring(1.455,.009,metal,scene,[0,-1.566,0]);baseTrim.rotation.x=Math.PI/2;
  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
  let paused=reduce.matches,inView=true,dragging=false,lastX=0,lastY=0,targetY=-.28,targetX=.04,yaw=-.28,pitch=.04,spinRemaining=0,time=0,lastFrame=0,lastInteraction=0,pointerX=0,pointerY=0,pointerActive=false,gazeX=0,gazeY=0,waveElapsed=Infinity,pressX=0,pressY=0,pressMoved=false;
- onGreet=()=>{if(!paused&&!reduce.matches)waveElapsed=0};
+ onGreet=()=>{updateCanvasBounds();if(!paused&&!reduce.matches)waveElapsed=0};
  const pauseButton=document.getElementById('model-pause');
  function syncPause(){pauseButton.setAttribute('aria-pressed',String(paused));pauseButton.innerHTML=paused?'▶ <span>Play</span>':'Ⅱ <span>Pause</span>';pauseButton.setAttribute('aria-label',paused?'Play idle animation':'Pause idle animation');}
  syncPause();reduce.addEventListener('change',()=>{paused=reduce.matches;syncPause()});
  // Cache the canvas bounds, then project the head to screen coordinates. This
  // makes the gaze follow the mouse anywhere in the viewport, relative to the bot.
- let canvasBounds=canvas.getBoundingClientRect();
- const headScreen=new THREE.Vector3();
- const updateCanvasBounds=()=>{canvasBounds=canvas.getBoundingClientRect()};
+ let canvasBounds=canvas.getBoundingClientRect(),hostBounds=host.getBoundingClientRect(),controlsBounds=document.querySelector('.model-controls').getBoundingClientRect();
+ const headScreen=new THREE.Vector3(),greetingAnchor=new THREE.Vector3();
+ const updateCanvasBounds=()=>{canvasBounds=canvas.getBoundingClientRect();hostBounds=host.getBoundingClientRect();controlsBounds=document.querySelector('.model-controls').getBoundingClientRect()};
+ positionGreeting=()=>{
+   robot.updateMatrixWorld(true);camera.updateMatrixWorld();
+   greetingAnchor.set(0,1.17,0);head.localToWorld(greetingAnchor);greetingAnchor.project(camera);
+   placeGreeting(canvasBounds.left-hostBounds.left+(greetingAnchor.x+1)*canvasBounds.width/2,canvasBounds.top-hostBounds.top+(1-greetingAnchor.y)*canvasBounds.height/2-10,hostBounds,controlsBounds);
+ };
  const clearGaze=()=>{pointerActive=false};
  window.addEventListener('pointermove',e=>{
    if(e.pointerType==='touch')return;
@@ -237,6 +262,7 @@ try {
    arms[1].rotation.z+=lift*(2.05+Math.sin(waveElapsed*17)*.18);
  }
  const blink=!paused&&time%5.2>5.03?.15:1;eyes.forEach(e=>e.scale.y=blink);
+ if(!greeting.hidden)positionGreeting();
  renderer.render(scene,camera);
  });
  resize();renderer.render(scene,camera);host.classList.add('three-ready');

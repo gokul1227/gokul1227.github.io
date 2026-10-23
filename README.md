@@ -53,4 +53,6 @@ Toolkit brand icons are local SVG assets from [Devicon v2.17.0](https://github.c
 
 Gokul-bot now has a visible neck with a swivel pivot. Mouse and pen movement anywhere in the viewport guides its head and eyes relative to the robot’s screen position. Eyes lead the smoothly damped head turn; leaving the page returns the gaze to neutral. Tracking yields to drag/spin controls, pauses with the animation, and respects reduced-motion preferences.
 
-Tap or click directly on the 3D robot to alternate “Vanakkam!” and “Hi!” in a short greeting bubble, with a small wave when animation is enabled. Enter or Space greets from the focused model; dragging and background clicks do not trigger greetings. The illustrated fallback supports the same greeting bubble.
+Tap or click directly on the 3D robot to show “Hi! 👋” in a compact speech bubble anchored above the head, with a small wave when animation is enabled. Enter or Space greets from the focused model; dragging and background clicks do not trigger greetings. The illustrated fallback supports the same greeting bubble.
+
+The greeting follows the projected head position, stays inside the stage, and avoids the model controls. The fallback illustration uses the same compact greeting above its antenna.
